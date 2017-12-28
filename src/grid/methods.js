@@ -139,7 +139,6 @@ export function parallelogramFactory({ Hex }) {
             5: ['z', 'x']
         }
         const [ firstCoordinate, secondCoordinate ] = DIRECTIONS[direction]
-        const hexes = []
 
         for (let first = 0; first < width; first++) {
             for (let second = 0; second < height; second++) {
@@ -149,11 +148,11 @@ export function parallelogramFactory({ Hex }) {
                     [secondCoordinate]: second + start.y
                 })
                 onCreate(hex)
-                hexes.push(hex)
+                this[hex] = hex
             }
         }
 
-        return hexes
+        return this
     }
 }
 
@@ -195,18 +194,17 @@ export function triangleFactory({ Hex }) {
             }
         }
         const { yStart, yEnd } = DIRECTIONS[direction]
-        const hexes = []
 
         for (let x = 0; x < size; x++) {
             for (let y = yStart(x); y < yEnd(x); y++) {
                 // add the hex manually (instead of using Hex#add) for better performance
                 const hex = Hex(x + start.x, y + start.y)
                 onCreate(hex)
-                hexes.push(hex)
+                this[hex] = hex
             }
         }
 
-        return hexes
+        return this
     }
 }
 
@@ -231,7 +229,6 @@ export function hexagonFactory({ Hex }) {
         center,
         onCreate = () => {}
     }) {
-        const hexes = []
         // radius includes the center hex
         radius -= 1
         center = Hex(center)
@@ -244,11 +241,11 @@ export function hexagonFactory({ Hex }) {
                 // add the hex manually (instead of using Hex#add) for better performance
                 const hex = Hex(x + center.x, y + center.y)
                 onCreate(hex)
-                hexes.push(hex)
+                this[hex] = hex
             }
         }
 
-        return hexes
+        return this
     }
 }
 
@@ -292,7 +289,6 @@ export function rectangleFactory({ Hex }) {
         const [ firstCoordinate, secondCoordinate ] = DIRECTIONS[direction]
         const firstStop = start.isPointy() ? width : height
         const secondStop = start.isPointy() ? height : width
-        const hexes = []
 
         for (let second = 0; second < secondStop; second++) {
             const secondOffset = Math.floor(second / 2)
@@ -304,10 +300,10 @@ export function rectangleFactory({ Hex }) {
                     [secondCoordinate]: second + start.y
                 })
                 onCreate(hex)
-                hexes.push(hex)
+                this[hex] = hex
             }
         }
 
-        return hexes
+        return this
     }
 }

@@ -29,20 +29,23 @@ describe('Grid', function() {
         Grid = createGridFactoryFactory({ createHexFactory })(Hex)
     })
 
-    it('returns an object with the Grid methods', function() {
-        const result = Grid()
-        const properties = Object.keys(result).length
+    it('returns an empty object', function() {
+        expect(Grid()).to.be.empty
+    })
 
-        expect(result).to.be.an('object')
-        expect(properties).to.equal(9)
-        expect(result).to.have.property('Hex').that.eqls(Hex)
-        expect(result).to.have.property('pointToHex')
-        expect(result).to.have.property('hexToPoint')
-        expect(result).to.have.property('colSize')
-        expect(result).to.have.property('rowSize')
-        expect(result).to.have.property('parallelogram')
-        expect(result).to.have.property('triangle')
-        expect(result).to.have.property('hexagon')
-        expect(result).to.have.property('rectangle')
+    it('has Grid methods in its prototype', function() {
+        const prototype = Object.getPrototypeOf(Grid())
+        const prototypeProps = Object.keys(prototype)
+
+        expect(prototypeProps).to.have.length(9)
+        expect(prototype).to.have.property('Hex', HexSpy)
+        expect(prototype).to.have.property('pointToHex')
+        expect(prototype).to.have.property('hexToPoint')
+        expect(prototype).to.have.property('colSize')
+        expect(prototype).to.have.property('rowSize')
+        expect(prototype).to.have.property('parallelogram')
+        expect(prototype).to.have.property('triangle')
+        expect(prototype).to.have.property('hexagon')
+        expect(prototype).to.have.property('rectangle')
     })
 })

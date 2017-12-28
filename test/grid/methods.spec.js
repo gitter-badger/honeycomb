@@ -170,102 +170,72 @@ describe('rowSize', function() {
 })
 
 describe('parallelogram', function() {
-    let parallelogram
+    let parallelogram, gridInstance
 
-    before(function() {
-        parallelogram = methods.parallelogramFactory({ Hex, isObject: isObjectSpy })
+    beforeEach(function() {
+        gridInstance = {}
+        parallelogram = methods.parallelogramFactory({ Hex, isObject: isObjectSpy }).bind(gridInstance)
     })
 
-    it('returns an array with a length of (width ⨉ height) hexes', function() {
-        const result = parallelogram({ width: 2, height: 3 })
-        expect(result).to.be.an('array')
+    it('returns width ⨉ height amount of hexes', function() {
+        const result = Object.values(parallelogram({ width: 2, height: 3 }))
         expect(result).to.have.a.lengthOf(6)
     })
 
     describe('when called without start hex or direction', function() {
-        it('returns the hexes in a parallelogram shape, starting at Hex(0)', function() {
-            const coordinates = parallelogram({ width: 2, height: 2 }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: 1, y: 0, z: -1 },
-                { x: 0, y: 1, z: -1 },
-                { x: 1, y: 1, z: -2 }
-            ])
+        it('creates hexes in a parallelogram shape, starting at Hex(0)', function() {
+            parallelogram({ width: 2, height: 2 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
         })
     })
 
     describe('when called with start hex', function() {
-        it('returns the hexes in a parallelogram shape, starting at the given start hex', function() {
-            const coordinates = parallelogram({
-                width: 2,
-                height: 2,
-                start: Hex(5, 4)
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 5, y: 4, z: -9 },
-                { x: 6, y: 4, z: -10 },
-                { x: 5, y: 5, z: -10 },
-                { x: 6, y: 5, z: -11 }
-            ])
+        it('creates hexes in a parallelogram shape, starting at the given start hex', function() {
+            parallelogram({ width: 2, height: 2, start: Hex(5, 4) })
+            expect(gridInstance).to.have.property('{ x: 5, y: 4, z: -9 }').that.contains({ x: 5, y: 4, z: -9 })
+            expect(gridInstance).to.have.property('{ x: 6, y: 4, z: -10 }').that.contains({ x: 6, y: 4, z: -10 })
+            expect(gridInstance).to.have.property('{ x: 5, y: 5, z: -10 }').that.contains({ x: 5, y: 5, z: -10 })
+            expect(gridInstance).to.have.property('{ x: 6, y: 5, z: -11 }').that.contains({ x: 6, y: 5, z: -11 })
         })
     })
 
     describe('when called with direction 1', function() {
-        it('returns the hexes in a parallelogram shape, in a southeastern direction', function() {
-            const coordinates = parallelogram({
-                width: 2,
-                height: 2,
-                direction: 1
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: 1, y: 0, z: -1 },
-                { x: 0, y: 1, z: -1 },
-                { x: 1, y: 1, z: -2 }
-            ])
+        it('creates hexes in a parallelogram shape, in a southeastern direction', function() {
+            parallelogram({ width: 2, height: 2, direction: 1 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
         })
     })
 
     describe('when called with direction 3', function() {
-        it('returns the hexes in a parallelogram shape, in a southwestern direction', function() {
-            const coordinates = parallelogram({
-                width: 2,
-                height: 2,
-                direction: 3
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: -1, y: 0, z: 1 },
-                { x: -1, y: 1, z: 0 },
-                { x: -2, y: 1, z: 1 }
-            ])
+        it('creates hexes in a parallelogram shape, in a southwestern direction', function() {
+            parallelogram({ width: 2, height: 2, direction: 3 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+            expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+            expect(gridInstance).to.have.property('{ x: -2, y: 1, z: 1 }').that.contains({ x: -2, y: 1, z: 1 })
         })
     })
 
     describe('when called with direction 5', function() {
-        it('returns the hexes in a parallelogram shape, in a northern direction', function() {
-            const coordinates = parallelogram({
-                width: 2,
-                height: 2,
-                direction: 5
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: 1, y: -1, z: 0 },
-                { x: 0, y: -1, z: 1 },
-                { x: 1, y: -2, z: 1 }
-            ])
+        it('creates hexes in a parallelogram shape, in a northern direction', function() {
+            parallelogram({ width: 2, height: 2, direction: 5 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: -2, z: 1 }').that.contains({ x: 1, y: -2, z: 1 })
         })
     })
 
     describe('when called with an onCreate callback', function() {
         it('calls the callback for each created hex', function() {
             const callback = sinon.spy()
-            parallelogram({
-                width: 2,
-                height: 2,
-                onCreate: callback
-            })
+            parallelogram({ width: 2, height: 2, onCreate: callback })
             expect(callback.callCount).to.eql(4)
             expect(callback).to.always.have.been.calledWith(sinon.match.has('hexesBetween'))
         })
@@ -273,69 +243,52 @@ describe('parallelogram', function() {
 })
 
 describe('triangle', function() {
-    let triangle
+    let triangle, gridInstance
 
-    before(function() {
-        triangle = methods.triangleFactory({ Hex, isObject: isObjectSpy })
+    beforeEach(function() {
+        gridInstance = {}
+        triangle = methods.triangleFactory({ Hex, isObject: isObjectSpy }).bind(gridInstance)
     })
 
     // https://en.wikipedia.org/wiki/Triangular_number
-    it('returns an array with a length of the triangular number of the size', function() {
-        const result = triangle({ size: 4 })
-        expect(result).to.be.an('array')
+    it('returns a "triangular" amount of hexes', function() {
+        const result = Object.values(triangle({ size: 4 }))
         expect(result).to.have.a.lengthOf(4+3+2+1)
     })
 
     describe('when called without start hex or direction', function() {
-        it('returns the hexes in a triangle shape, starting at Hex(0)', function() {
-            const coordinates = triangle({ size: 2 }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: 0, y: 1, z: -1 },
-                { x: 1, y: 0, z: -1 }
-            ])
+        it('creates hexes in a triangle shape, starting at Hex(0)', function() {
+            triangle({ size: 2 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
         })
     })
 
     describe('when called with start hex', function() {
-        it('returns the hexes in a triangle shape, starting at the given start hex', function() {
-            const coordinates = triangle({
-                size: 2,
-                start: Hex(3, 6)
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 3, y: 6, z: -9 },
-                { x: 3, y: 7, z: -10 },
-                { x: 4, y: 6, z: -10 }
-            ])
+        it('creates hexes in a triangle shape, starting at the given start hex', function() {
+            triangle({ size: 2, start: Hex(3, 6) })
+            expect(gridInstance).to.have.property('{ x: 3, y: 6, z: -9 }').that.contains({ x: 3, y: 6, z: -9 })
+            expect(gridInstance).to.have.property('{ x: 3, y: 7, z: -10 }').that.contains({ x: 3, y: 7, z: -10 })
+            expect(gridInstance).to.have.property('{ x: 4, y: 6, z: -10 }').that.contains({ x: 4, y: 6, z: -10 })
         })
     })
 
     describe('when called with direction 1', function() {
-        it('returns the hexes in a triangle shape, pointing down', function() {
-            const coordinates = triangle({
-                size: 2,
-                direction: 1
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 0, z: 0 },
-                { x: 0, y: 1, z: -1 },
-                { x: 1, y: 0, z: -1 }
-            ])
+        it('creates hexes in a triangle shape, pointing down', function() {
+            triangle({ size: 2, direction: 1 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
         })
     })
 
     describe('when called with direction 5', function() {
-        it('returns the hexes in a triangle shape, pointing up', function() {
-            const coordinates = triangle({
-                size: 2,
-                direction: 5
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: 2, z: -2 },
-                { x: 1, y: 1, z: -2 },
-                { x: 1, y: 2, z: -3 }
-            ])
+        it('creates hexes in a triangle shape, pointing up', function() {
+            triangle({ size: 2, direction: 5 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 2, z: -2 }').that.contains({ x: 0, y: 2, z: -2 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 2, z: -3 }').that.contains({ x: 1, y: 2, z: -3 })
         })
     })
 
@@ -353,48 +306,41 @@ describe('triangle', function() {
 })
 
 describe('hexagon', function() {
-    let hexagon
+    let hexagon, gridInstance
 
-    before(function() {
-        hexagon = methods.hexagonFactory({ Hex, isObject: isObjectSpy })
+    beforeEach(function() {
+        gridInstance = {}
+        hexagon = methods.hexagonFactory({ Hex, isObject: isObjectSpy }).bind(gridInstance)
     })
 
-    it('returns an array with a hard to determine amount of hexes 😬', function() {
-        const result = hexagon({ radius: 4 })
-        expect(result).to.be.an('array')
+    it('returns a hard to determine amount of hexes 😬', function() {
+        const result = Object.values(hexagon({ radius: 4 }))
         expect(result).to.have.a.lengthOf(37)
     })
 
     describe('when called without center hex', function() {
-        it('returns the hexes in a hexagon shape, with its center at Hex(0)', function() {
-            const coordinates = hexagon({ radius: 2 }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 0, y: -1, z: 1 },
-                { x: 1, y: -1, z: 0 },
-                { x: -1, y: 0, z: 1 },
-                { x: 0, y: 0, z: 0 },
-                { x: 1, y: 0, z: -1 },
-                { x: -1, y: 1, z: 0 },
-                { x: 0, y: 1, z: -1 }
-            ])
+        it('creates hexes in a hexagon shape, with its center at Hex(0)', function() {
+            hexagon({ radius: 2 })
+            expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+            expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+            expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+            expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+            expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
         })
     })
 
     describe('when called with center hex', function() {
-        it('returns the hexes in a hexagon shape, with its center at the given center hex', function() {
-            const coordinates = hexagon({
-                radius: 2,
-                center: Hex(3, 1)
-            }).map(hex => hex.coordinates())
-            expect(coordinates).to.deep.include.members([
-                { x: 3, y: 0, z: -3 },
-                { x: 4, y: 0, z: -4 },
-                { x: 2, y: 1, z: -3 },
-                { x: 3, y: 1, z: -4 },
-                { x: 4, y: 1, z: -5 },
-                { x: 2, y: 2, z: -4 },
-                { x: 3, y: 2, z: -5 }
-            ])
+        it('creates hexes in a hexagon shape, with its center at the given center hex', function() {
+            hexagon({ radius: 2, center: Hex(3, 1) })
+            expect(gridInstance).to.have.property('{ x: 3, y: 0, z: -3 }').that.contains({ x: 3, y: 0, z: -3 })
+            expect(gridInstance).to.have.property('{ x: 4, y: 0, z: -4 }').that.contains({ x: 4, y: 0, z: -4 })
+            expect(gridInstance).to.have.property('{ x: 2, y: 1, z: -3 }').that.contains({ x: 2, y: 1, z: -3 })
+            expect(gridInstance).to.have.property('{ x: 3, y: 1, z: -4 }').that.contains({ x: 3, y: 1, z: -4 })
+            expect(gridInstance).to.have.property('{ x: 4, y: 1, z: -5 }').that.contains({ x: 4, y: 1, z: -5 })
+            expect(gridInstance).to.have.property('{ x: 2, y: 2, z: -4 }').that.contains({ x: 2, y: 2, z: -4 })
+            expect(gridInstance).to.have.property('{ x: 3, y: 2, z: -5 }').that.contains({ x: 3, y: 2, z: -5 })
         })
     })
 
@@ -412,149 +358,105 @@ describe('hexagon', function() {
 })
 
 describe('rectangle', function() {
-    let rectangle, Hex
+    let rectangle, Hex, gridInstance
 
     before(function() {
-        rectangle = methods.rectangleFactory({ Hex: createHexFactory(), isObject: isObjectSpy })
+        gridInstance = {}
+        rectangle = methods.rectangleFactory({ Hex: createHexFactory(), isObject: isObjectSpy }).bind(gridInstance)
     })
 
-    it('returns an array with a length of (width ⨉ height) hexes', function() {
-        const result = rectangle({ width: 4, height: 5 })
-        expect(result).to.be.an('array')
+    it('returns width ⨉ height amount of hexes', function() {
+        const result = Object.values(rectangle({ width: 4, height: 5 }))
         expect(result).to.have.a.lengthOf(20)
     })
 
     describe('when hexes have a pointy orientation', function() {
         before(function() {
             Hex = createHexFactory({ orientation: 'POINTY' })
-            rectangle = methods.rectangleFactory({ Hex , isObject: isObjectSpy })
+            rectangle = methods.rectangleFactory({ Hex, isObject: isObjectSpy }).bind(gridInstance)
         })
 
         describe('when called without start hex or direction', function() {
-            it('returns the hexes in a rectangle shape, starting at Hex(0)', function() {
-                const coordinates = rectangle({ width: 2, height: 3 }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 1, z: -2 },
-                    { x: -1, y: 2, z: -1 },
-                    { x: 0, y: 2, z: -2 }
-                ])
+            it('creates hexes in a rectangle shape, starting at Hex(0)', function() {
+                rectangle({ width: 2, height: 3 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 2, z: -1 }').that.contains({ x: -1, y: 2, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 2, z: -2 }').that.contains({ x: 0, y: 2, z: -2 })
             })
         })
 
         describe('when called with start hex', function() {
-            it('returns the hexes in a rectangle shape, starting at the given start hex', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 3,
-                    start: Hex(-4, -2)
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: -4, y: -2, z: 6 },
-                    { x: -3, y: -2, z: 5 },
-                    { x: -4, y: -1, z: 5 },
-                    { x: -3, y: -1, z: 4 },
-                    { x: -5, y: 0, z: 5 },
-                    { x: -4, y: 0, z: 4 }
-                ])
+            it('creates hexes in a rectangle shape, starting at the given start hex', function() {
+                rectangle({ width: 2, height: 3, start: Hex(-4, -2) })
+                expect(gridInstance).to.have.property('{ x: -4, y: -2, z: 6 }').that.contains({ x: -4, y: -2, z: 6 })
+                expect(gridInstance).to.have.property('{ x: -3, y: -2, z: 5 }').that.contains({ x: -3, y: -2, z: 5 })
+                expect(gridInstance).to.have.property('{ x: -4, y: -1, z: 5 }').that.contains({ x: -4, y: -1, z: 5 })
+                expect(gridInstance).to.have.property('{ x: -3, y: -1, z: 4 }').that.contains({ x: -3, y: -1, z: 4 })
+                expect(gridInstance).to.have.property('{ x: -5, y: 0, z: 5 }').that.contains({ x: -5, y: 0, z: 5 })
+                expect(gridInstance).to.have.property('{ x: -4, y: 0, z: 4 }').that.contains({ x: -4, y: 0, z: 4 })
             })
         })
 
         describe('when called with direction 0', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 0
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 1, z: -2 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
             })
         })
 
         describe('when called with direction 1', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 1
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 1, y: 1, z: -2 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
             })
         })
 
         describe('when called with direction 2', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 2
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: -1, y: 1, z: 0 },
-                    { x: -1, y: 0, z: 1 },
-                    { x: -2, y: 1, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 2 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+                expect(gridInstance).to.have.property('{ x: -2, y: 1, z: 1 }').that.contains({ x: -2, y: 1, z: 1 })
             })
         })
 
         describe('when called with direction 3', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 3
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: -1, y: 0, z: 1 },
-                    { x: -1, y: 1, z: 0 },
-                    { x: -2, y: 1, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 3 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -2, y: 1, z: 1 }').that.contains({ x: -2, y: 1, z: 1 })
             })
         })
 
         describe('when called with direction 4', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 4
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: -1, z: 1 },
-                    { x: 1, y: -1, z: 0 },
-                    { x: 1, y: -2, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 4 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -2, z: 1 }').that.contains({ x: 1, y: -2, z: 1 })
             })
         })
 
         describe('when called with direction 5', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 5
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: -1, z: 0 },
-                    { x: 0, y: -1, z: 1 },
-                    { x: 1, y: -2, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 5 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -2, z: 1 }').that.contains({ x: 1, y: -2, z: 1 })
             })
         })
     })
@@ -562,134 +464,90 @@ describe('rectangle', function() {
     describe('when hexes have a flat orientation', function() {
         before(function() {
             Hex = createHexFactory({ orientation: 'FLAT' })
-            rectangle = methods.rectangleFactory({ Hex, isObject: isObjectSpy })
+            rectangle = methods.rectangleFactory({ Hex, isObject: isObjectSpy }).bind(gridInstance)
         })
 
         describe('when called without start hex or direction', function() {
-            it('returns the hexes in a rectangle shape, starting at Hex(0)', function() {
-                const coordinates = rectangle({ width: 2, height: 3 }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 2, y: 0, z: -2 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 1, z: -2 },
-                    { x: 2, y: 1, z: -3 }
-                ])
+            it('creates hexes in a rectangle shape, starting at Hex(0)', function() {
+                rectangle({ width: 2, height: 3 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 2, y: 0, z: -2 }').that.contains({ x: 2, y: 0, z: -2 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
+                expect(gridInstance).to.have.property('{ x: 2, y: 1, z: -3 }').that.contains({ x: 2, y: 1, z: -3 })
             })
         })
 
         describe('when called with start hex', function() {
-            it('returns the hexes in a rectangle shape, starting at the given start hex', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 3,
-                    start: Hex(-4, -2)
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: -4, y: -2, z: 6 },
-                    { x: -3, y: -2, z: 5 },
-                    { x: -2, y: -2, z: 4 },
-                    { x: -4, y: -1, z: 5 },
-                    { x: -3, y: -1, z: 4 },
-                    { x: -2, y: -1, z: 3 }
-                ])
+            it('creates hexes in a rectangle shape, starting at the given start hex', function() {
+                rectangle({ width: 2, height: 3, start: Hex(-4, -2) })
+                expect(gridInstance).to.have.property('{ x: -4, y: -2, z: 6 }').that.contains({ x: -4, y: -2, z: 6 })
+                expect(gridInstance).to.have.property('{ x: -3, y: -2, z: 5 }').that.contains({ x: -3, y: -2, z: 5 })
+                expect(gridInstance).to.have.property('{ x: -2, y: -2, z: 4 }').that.contains({ x: -2, y: -2, z: 4 })
+                expect(gridInstance).to.have.property('{ x: -4, y: -1, z: 5 }').that.contains({ x: -4, y: -1, z: 5 })
+                expect(gridInstance).to.have.property('{ x: -3, y: -1, z: 4 }').that.contains({ x: -3, y: -1, z: 4 })
+                expect(gridInstance).to.have.property('{ x: -2, y: -1, z: 3 }').that.contains({ x: -2, y: -1, z: 3 })
             })
         })
 
         describe('when called with direction 0', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 0
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 1, z: -2 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
             })
         })
 
         describe('when called with direction 1', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 1
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: 1, z: -1 },
-                    { x: 1, y: 0, z: -1 },
-                    { x: 1, y: 1, z: -2 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 1 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 1, z: -1 }').that.contains({ x: 0, y: 1, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 0, z: -1 }').that.contains({ x: 1, y: 0, z: -1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: 1, z: -2 }').that.contains({ x: 1, y: 1, z: -2 })
             })
         })
 
         describe('when called with direction 2', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 2
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: -1, y: 1, z: 0 },
-                    { x: -1, y: 0, z: 1 },
-                    { x: -2, y: 1, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 2 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+                expect(gridInstance).to.have.property('{ x: -2, y: 1, z: 1 }').that.contains({ x: -2, y: 1, z: 1 })
             })
         })
 
         describe('when called with direction 3', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 3
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: -1, y: 0, z: 1 },
-                    { x: -1, y: 1, z: 0 },
-                    { x: -2, y: 1, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 3 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 0, z: 1 }').that.contains({ x: -1, y: 0, z: 1 })
+                expect(gridInstance).to.have.property('{ x: -1, y: 1, z: 0 }').that.contains({ x: -1, y: 1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: -2, y: 1, z: 1 }').that.contains({ x: -2, y: 1, z: 1 })
             })
         })
 
         describe('when called with direction 4', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 4
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: -1, z: 1 },
-                    { x: 1, y: -1, z: 0 },
-                    { x: 1, y: -2, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 4 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -2, z: 1 }').that.contains({ x: 1, y: -2, z: 1 })
             })
         })
 
         describe('when called with direction 5', function() {
-            it('returns the hexes in a rectangle shape, in an eastern direction', function() {
-                const coordinates = rectangle({
-                    width: 2,
-                    height: 2,
-                    direction: 5
-                }).map(hex => hex.coordinates())
-                expect(coordinates).to.deep.include.members([
-                    { x: 0, y: 0, z: 0 },
-                    { x: 1, y: -1, z: 0 },
-                    { x: 0, y: -1, z: 1 },
-                    { x: 1, y: -2, z: 1 }
-                ])
+            it('creates hexes in a rectangle shape, in an eastern direction', function() {
+                rectangle({ width: 2, height: 2, direction: 5 })
+                expect(gridInstance).to.have.property('{ x: 0, y: 0, z: 0 }').that.contains({ x: 0, y: 0, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -1, z: 0 }').that.contains({ x: 1, y: -1, z: 0 })
+                expect(gridInstance).to.have.property('{ x: 0, y: -1, z: 1 }').that.contains({ x: 0, y: -1, z: 1 })
+                expect(gridInstance).to.have.property('{ x: 1, y: -2, z: 1 }').that.contains({ x: 1, y: -2, z: 1 })
             })
         })
     })
@@ -697,11 +555,7 @@ describe('rectangle', function() {
     describe('when called with an onCreate callback', function() {
         it('calls the callback for each created hex', function() {
             const callback = sinon.spy()
-            rectangle({
-                width: 2,
-                height: 2,
-                onCreate: callback
-            })
+            rectangle({ width: 2, height: 2, onCreate: callback })
             expect(callback.callCount).to.eql(4)
             expect(callback).to.always.have.been.calledWith(sinon.match.has('hexesBetween'))
         })

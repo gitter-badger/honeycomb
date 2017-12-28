@@ -41,17 +41,19 @@ export default function createGridFactoryFactory({ createHexFactory }) {
          * grid2.pointToHex([ 20, 40 ]) // { x: 0, y: 1, z: -1 }
          */
         return function Grid() {
-            return {
+            const prototype = {
                 Hex,
-                pointToHex:     methods.pointToHexFactory({ Point, Hex }),
-                hexToPoint:     methods.hexToPoint,
-                colSize:        methods.colSizeFactory({ Hex }),
-                rowSize:        methods.rowSizeFactory({ Hex }),
-                parallelogram:  methods.parallelogramFactory({ Hex }),
-                triangle:       methods.triangleFactory({ Hex }),
-                hexagon:        methods.hexagonFactory({ Hex }),
-                rectangle:      methods.rectangleFactory({ Hex })
+                pointToHex: methods.pointToHexFactory({ Point, Hex }),
+                hexToPoint: methods.hexToPoint,
+                colSize: methods.colSizeFactory({ Hex }),
+                rowSize: methods.rowSizeFactory({ Hex }),
+                parallelogram: methods.parallelogramFactory({ Hex }),
+                triangle: methods.triangleFactory({ Hex }),
+                hexagon: methods.hexagonFactory({ Hex }),
+                rectangle: methods.rectangleFactory({ Hex })
             }
+
+            return Object.create(prototype)
         }
     }
 }
