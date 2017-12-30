@@ -38,7 +38,7 @@ describe('Grid', function() {
         const prototypeProps = Object.keys(prototype)
 
         expect(prototypeProps).to.have.length(9)
-        expect(prototype).to.have.property('Hex', HexSpy)
+        expect(prototype).to.have.property('Hex', Hex)
         expect(prototype).to.have.property('pointToHex')
         expect(prototype).to.have.property('hexToPoint')
         expect(prototype).to.have.property('colSize')
