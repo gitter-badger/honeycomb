@@ -37,15 +37,22 @@ describe('Grid', function() {
         const prototype = Object.getPrototypeOf(Grid())
         const prototypeProps = Object.keys(prototype)
 
-        expect(prototypeProps).to.have.length(9)
-        expect(prototype).to.have.property('Hex', Hex)
-        expect(prototype).to.have.property('pointToHex')
-        expect(prototype).to.have.property('hexToPoint')
-        expect(prototype).to.have.property('colSize')
-        expect(prototype).to.have.property('rowSize')
-        expect(prototype).to.have.property('parallelogram')
-        expect(prototype).to.have.property('triangle')
-        expect(prototype).to.have.property('hexagon')
-        expect(prototype).to.have.property('rectangle')
+        expect(prototypeProps).to.eql([
+            'Hex',
+            'pointToHex',
+            'hexToPoint',
+            'colSize',
+            'rowSize',
+            'parallelogram',
+            'triangle',
+            'hexagon',
+            'rectangle',
+            'find',
+            'filter',
+            'forEach',
+            'map',
+            'reduce'
+        ])
+        expect(prototype).to.have.property('Hex', HexSpy)
     })
 })
