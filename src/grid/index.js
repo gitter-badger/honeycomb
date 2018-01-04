@@ -3,6 +3,38 @@ import * as methods from './methods'
 
 export default function createGridFactoryFactory({ createHexFactory }) {
     return function createFactory(Hex = createHexFactory()) {
+        const prototype = {
+            Hex,
+            pointToHex: methods.pointToHexFactory({ Point, Hex }),
+            hexToPoint: methods.hexToPoint,
+            colSize: methods.colSizeFactory({ Hex }),
+            rowSize: methods.rowSizeFactory({ Hex }),
+            parallelogram: methods.parallelogramFactory({ Hex }),
+            triangle: methods.triangleFactory({ Hex }),
+            hexagon: methods.hexagonFactory({ Hex }),
+            rectangle: methods.rectangleFactory({ Hex }),
+            // TODO: move to methods
+            // neighborsOf: function(hex) {
+            //     return hex.neighbors().map(neighbor => this[neighbor])
+            // },
+
+            find: function(...args) {
+                return Hex(borrowArrayMethod('find', this, args))
+            },
+            filter: function(...args) {
+                return Grid(borrowArrayMethod('filter', this, args))
+            },
+            forEach: function(...args) {
+                return borrowArrayMethod('forEach', this, args)
+            },
+            map: function(...args) {
+                return borrowArrayMethod('map', this, args)
+            },
+            reduce: function(...args) {
+                return borrowArrayMethod('reduce', this, args)
+            }
+        }
+
         /**
          * @module src/grid
          * @function Grid
@@ -40,20 +72,19 @@ export default function createGridFactoryFactory({ createHexFactory }) {
          * grid.pointToHex([ 20, 40 ])  // { x: -1, y: 27, z: -25 }
          * grid2.pointToHex([ 20, 40 ]) // { x: 0, y: 1, z: -1 }
          */
-        return function Grid() {
-            const prototype = {
-                Hex,
-                pointToHex: methods.pointToHexFactory({ Point, Hex }),
-                hexToPoint: methods.hexToPoint,
-                colSize: methods.colSizeFactory({ Hex }),
-                rowSize: methods.rowSizeFactory({ Hex }),
-                parallelogram: methods.parallelogramFactory({ Hex }),
-                triangle: methods.triangleFactory({ Hex }),
-                hexagon: methods.hexagonFactory({ Hex }),
-                rectangle: methods.rectangleFactory({ Hex })
-            }
-
-            return Object.create(prototype)
+        function Grid(gridLike = []) {
+            // TODO: make sure it can also accept a grid (which it should once Grid#reduce is implemented)
+            const instance = Object.create(prototype)
+            return gridLike.reduce((acc, hex) => {
+                acc[hex] = hex
+                return acc
+            }, instance)
         }
+
+        return Grid
     }
+}
+
+function borrowArrayMethod(methodName, grid, args) {
+    return Array.prototype[methodName].apply(Object.values(grid), args)
 }
